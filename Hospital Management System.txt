@@ -1,0 +1,83 @@
+create database hms;
+use hms;
+
+create table department(d_name varchar(30) primary key,d_location varchar(20),d_facilities varchar(200));
+create table all_doctors(doc_number varchar(20) primary key,doc_department varchar(20),foreign key(doc_department) references department(d_name));
+create table doc_reg(doc_number varchar(20),foreign key(doc_number) references all_doctors(doc_number),doc_name varchar(30),doc_qualification varchar(20),doc_address varchar(50),doc_num char(10), doc_salary float,doc_joining date);
+create table doc_on_call(doc_number varchar(20),foreign key(doc_number) references all_doctors(doc_number),doc_name varchar(20),doc_qualification varchar(20),doc_fees float,doc_payment_due float,address varchar(30),doc_num char(10));
+create table pat_entry(pat_no varchar(20) primary key,sex varchar(6),pat_name varchar(20),pat_age int,pat_address varchar(20),pat_city varchar(20),pat_phnum char(10),pat_entry date,doc_num varchar(20),foreign key(doc_num) references all_doctors(doc_number),d_name varchar(20),foreign key(d_name) references department(d_name));
+create table pat_chkup(pat_no varchar(20),foreign key(pat_no) references pat_entry(pat_no),doc_num char(10),chk_up_date date,diagonsis_date date,treat_date date,ref_pat varchar(20));
+create table pat_admit(pat_no varchar(20),foreign key(pat_no) references pat_entry(pat_no),advance_pay float,mod_pay varchar(10),room_no varchar(10),dept varchar(20),foreign key(dept) references department(d_name),date_admission date,ini_cond varchar(10),treatment varchar(10),doc_num varchar(20),foreign key(doc_num) references all_doctors(doc_number));
+create table pat_dis(pat_no varchar(20),foreign key(pat_no) references pat_entry(pat_no),treat_given varchar(20),treat_advice varchar(20),pay_made boolean,mod_pay varchar(10), discharge date);
+create table pat_reg(pat_no varchar(20),foreign key(pat_no) references pat_entry(pat_no),date_visit date,diagnosis varchar(20),treat varchar(10),medi_recommded varchar(20),status_treat varchar(20));
+create table pat_opr(pat_no varchar(20),foreign key(pat_no) references pat_entry(pat_no),date_admission date,date_opr date,doc_number varchar(20),foreign key(doc_number) references all_doctors(doc_number),no_opr int,typ_opr varchar(10),pat_cond_b varchar(10),pat_cond_a varchar(10),treat_advice varchar(10));
+create table room_details(room_no varchar(10) primry key,room_typ varchar(10),room_status varchar(10),pat_no varchar(20),pat_name varchar(20),charges_day float);
+
+desc department;
+insert into department values('cardiology','covai','general ward');
+insert into department values('ontology','chennai','general ward');
+insert into department values('dentist','madurai','general ward');
+select * from department;
+
+
+desc all_doctors;
+insert into all_doctors values('Dr.1','cardiology');
+insert into all_doctors values('Dr.2','ontology');
+insert into all_doctors values('Dr.3','dentist');
+select * from all_doctors;
+
+
+desc doc_on_call;
+insert into doc_on_call values('Dr.1','mari','MBBS',5000.00,5000.00,'covai','9943225413');
+insert into doc_on_call values('Dr.2','selvam','MBBS',4000.00,36000.00,'chennai','9715911718');
+insert into doc_on_call values('Dr.3','bala','BDS',14000.00,16000.00,'madurai','8925413032');
+select * from doc_on_call;
+
+
+desc pat_entry;
+insert into pat_entry values('PT01','female','abi',25,'hopes','covai','9988776655','2021-09-10','Dr.1','cardiology');
+insert into pat_entry values('PT02','male','mani',23,'ecr','chennai','9888786858','2020-03-10','Dr.2','ontology');
+insert into pat_entry values('PT03','male','sanjai',40,'poomarket','madurai','9988776644','2019-04-12','Dr.3','dentist');
+select * from par_entry;
+
+
+desc pat_chkup;
+insert into pat_chkup values('PT01','Dr.1','2021-09-12','2021-09-13','2021-09-14','regular');
+insert into pat_chkup values('PT02','Dr.2','2019-04-12','2019-04-13','2019-04-14','operation');
+insert into pat_chkup values('PT03','Dr.3','2020-03-04','2020-03-05','2020-03-06','normal');
+select * from pat_chkup;
+
+
+desc pat_admit;
+insert into pat_admit values('PT1',7000.00,'cash','001','cardiology','2021-05-06','normal','medicine','Dr.1');
+insert into pat_admit values('PT02',8000.00,'online','002','ontology','2021-06-06','serious','operation','Dr.2');
+insert into pat_admit values('PT03',10000.00,'cash','003','dentist','2020-03-06','serious','operation','Dr.3');
+select * from pat_admit;
+
+
+desc pat_dis;
+insert into pat_dis values('PT01','surgery','surgery',1,'cash','2021-05-11');
+insert into pat_dis values('PT02','surgery','surgery',1,'online','2021-06-15');
+insert into pat_dis values('PT03','dentist','dental excration',1,'cash','2020-03-11');
+select * from pat_dis;
+
+
+desc pat_reg;
+insert into pat_reg values('PT01','2020-03-15',null,'surgery','aspirin','completed');
+insert into pat_reg values('PT02','2021-04-15',null,'surgery','aspirin','first stage');
+insert into pat_reg values('PT03','2019-04-23',null,'dental extraction','pneumothorax','completed');
+select * from pat_reg;
+
+
+desc pat_opr;
+insert into pat_opr values('PT01','2020-03-15','2020-03-16','Dr.1',1,'surgery','serious','normal','surgery');
+insert into pat_opr values('PT03','2021-04-15','2020-04-17','Dr.3',2,'dental extration','normal','normal','dental extraction');
+insert into pat_opr values('PT04','2021-3-25','2020-05-16','Dr.3',2,'dental extration','normal','normal','dental extraction');
+select * from pat_opr;
+
+
+desc room_details;
+insert into room_details values('001','g','y','PT01','abi',1000.00);
+insert into room_details values('002','g','y','PT02','mani',1000.00);
+insert into room_details values('003','h','y','PT03','sanjai',3000.00);
+select * from room_details;
